@@ -1,8 +1,8 @@
 import * as d3 from 'd3';
 import Grid from './grid';
 
-const WIDTH = 500;
-const HEIGHT = 500;
+const WIDTH = 800;
+const HEIGHT = 800;
 const PADDING_HORIZONTAL = 60;
 const PADDING_VERTICAL = 60;
 
@@ -46,23 +46,53 @@ class View {
     return PADDING_VERTICAL   + (i/(size-1)) * (HEIGHT - 2 * PADDING_VERTICAL );
   }
 
-  drawGrid(grid) {
+  drawVertices(size) {
     let vertices = [];
-    for (let i = 0; i < grid.size; i++) {
-      for (let j = 0; j < grid.size; j++) {
+    for (let i = 0; i < size; i++) {
+      for (let j = 0; j < size; j++) {
         vertices.push([i, j])
       }
     }
-    this.svg
+    let circles = this.svg
       .selectAll('circle')
       .data(vertices)
+      .attr('cx', coordinate => this.coordinateToX(coordinate, size))
+      .attr('cy', coordinate => this.coordinateToY(coordinate, size))
+    circles.exit().remove();
+    circles
       .enter()
       .append('circle')
       .style('stroke', 'gray')
       .style('fill', 'black')
       .attr('r', 2)
-      .attr('cx', coordinate => this.coordinateToX(coordinate, grid.size))
-      .attr('cy', coordinate => this.coordinateToY(coordinate, grid.size))
+      .attr('cx', coordinate => this.coordinateToX(coordinate, size))
+      .attr('cy', coordinate => this.coordinateToY(coordinate, size))
+  }
+
+  drawEdges(grid) {
+    const edges = grid.getAllEdges();
+    console.log(edges);
+    let lines = this.svg
+      .selectAll("line")
+      .data(edges)
+      .attr("x1", ([i1, j1, i2, j2]) => this.coordinateToX([i1, j1], grid.size))
+      .attr("y1", ([i1, j1, i2, j2]) => this.coordinateToY([i1, j1], grid.size))
+      .attr("x2", ([i1, j1, i2, j2]) => this.coordinateToX([i2, j2], grid.size))
+      .attr("y2", ([i1, j1, i2, j2]) => this.coordinateToY([i2, j2], grid.size));
+
+    lines.exit().remove();
+
+    lines
+      .enter()
+      .append("line")
+      .attr("x1", ([i1, j1, i2, j2]) => this.coordinateToX([i1, j1], grid.size))
+      .attr("y1", ([i1, j1, i2, j2]) => this.coordinateToY([i1, j1], grid.size))
+      .attr("x2", ([i1, j1, i2, j2]) => this.coordinateToX([i2, j2], grid.size))
+      .attr("y2", ([i1, j1, i2, j2]) => this.coordinateToY([i2, j2], grid.size))
+      .attr("stroke", "black");
+
+    console.log(lines);
+    
   }
 }
 
@@ -70,21 +100,23 @@ class Controller {
   constructor(model, view) {
     this.model = model;
     this.view = view;
-    this.draw()
+    this.drawInitial()
   }
 
-  draw() {
-    this.view.drawGrid(this.model.grid);
+  drawInitial() {
+    this.view.drawVertices(this.model.grid.size);
+    this.view.drawEdges(this.model.grid);
   }
 
   setSize(size) {
     this.model.setSize(size);
-    this.draw()
+    this.view.drawVertices(size);
+    this.view.drawEdges(this.model.grid);
   }
 
   setProbability(probability) {
     this.model.setProbability(probability);
-    this.draw()
+    this.view.drawEdges(this.model.grid)
   }
 }
 

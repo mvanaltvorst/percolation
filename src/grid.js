@@ -17,6 +17,26 @@ export default class Grid {
     return this.adjList[Math.min(c1, c2)].includes(Math.max(c1, c2));
   }
 
+  getAllEdges() {
+    let edges = [];
+    for (let i = 0; i < this.size; i++) {
+      for (let j = 0; j < this.size; j++) {
+        const neighbours = [
+          [i + 1, j],
+          [i - 1, j],
+          [i, j + 1],
+          [i, j - 1]
+        ]
+        neighbours.map(([p, q]) => {
+          if (p < 0 || p >= this.size || q < 0 || q >= this.size) return;
+          if (!this.getEdge(i, j, p, q)) return;
+          edges.push([i, j, p, q]);
+        })
+      }
+    }
+    return edges;
+  }
+
   coordToIndex(i, j) {
     return i*this.size + j;
   }
