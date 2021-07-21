@@ -1,5 +1,3 @@
-import { min } from "d3";
-
 export default class Grid {
   constructor(size) {
     this.size = size;
@@ -25,7 +23,7 @@ export default class Grid {
 
   indexToCoord(c) {
     return { 
-      i: c / this.size, 
+      i: ~~(c / this.size), // integer division, works via double bit inversion
       j: c % this.size 
     };
   }
@@ -86,8 +84,6 @@ export default class Grid {
   }
 
   initAdjList(probability) {
-    const nVertices = this.size*this.size;
-
     for (let i = 0; i < this.size; i++) {
       for (let j = 0; j < this.size; j++) {
         if (j != this.size - 1) {
@@ -104,5 +100,4 @@ export default class Grid {
       }
     }
   }
-
 }
