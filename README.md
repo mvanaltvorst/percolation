@@ -14,7 +14,7 @@ The `src/` directory contains the actual JavaScript code, with `index.js` being 
 In `dist/index.html`, you can find the HTML.
 
 During development, you can use `npm run dev` to run the development server, 
-available on `localhost:8080`. 
+available on `localhost:8080`. Please use Google Chrome for live reloads.
 
 ## Deploy
 To deploy, run `npm run build`. This transpiles all javascript into the `src/` directory into a single file: `dist/main.js`. After this, you can deploy this code to e.g. a blog. 

@@ -21,10 +21,10 @@ module.exports = {
     ] 
   },
   devServer: {
-    contentBase: [path.join(__dirname, 'dist'), path.join(__dirname, 'src')],
+    contentBase: path.join(__dirname, 'dist'),
     port: 8080,
     open: true,
-    inline: true,
-    hot: true
+    hot: true,
+    inline: true
   },
 };

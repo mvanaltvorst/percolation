@@ -1,12 +1,23 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Percolation</title>
-    <script src="main.js"></script>
-  </head>
-  <body>
-    <h1>Percolation</h1>
-    <div className="percolation-graph"></div>
-  </body>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Percolation</title>
+  <script src="main.js"></script>
+</head>
+
+<body>
+  <h1>Percolation</h1>
+  <div>
+    <span>Size: </span>
+    <input type="range" min="2" max="50" value="25" oninput="app.setSize(parseInt(this.value))" style="width:100%" />
+  </div>
+  <div>
+    <span>Probability: </span>
+    <input type="range" min="0" max="1000" value="500" oninput="app.setProbability(parseInt(this.value)/1000)" style="width:100%" />
+  </div>
+  <div className="percolation-graph"></div>
+</body>
+
 </html>
