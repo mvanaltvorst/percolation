@@ -23,9 +23,9 @@ export default class Grid {
       for (let j = 0; j < this.size; j++) {
         const neighbours = [
           [i + 1, j],
-          [i - 1, j],
+          // [i - 1, j],
           [i, j + 1],
-          [i, j - 1]
+          // [i, j - 1]
         ]
         neighbours.map(([p, q]) => {
           if (p < 0 || p >= this.size || q < 0 || q >= this.size) return;
@@ -56,7 +56,7 @@ export default class Grid {
     }
   }
 
-  dfs(i, j) {
+  dfsClusterFind(i, j) {
     if (this.visited[i][j]) return 0;
     this.visited[i][j] = true;
 
@@ -71,7 +71,7 @@ export default class Grid {
     neighbours.map(([p, q]) => {
       if (p < 0 || p >= this.size || q < 0 || q >= this.size) return;
       if (!this.getEdge(i, j, p, q)) return;
-      acc += this.dfs(p, q);
+      acc += this.dfsClusterFind(p, q);
     })
     return acc;
   }
@@ -86,7 +86,7 @@ export default class Grid {
     for (let i = 0; i < this.size; i++) {
       for (let j = 0; j < this.size; j++) {
         if (this.visited[i][j]) continue;
-        let length = this.dfs(i, j);
+        let length = this.dfsClusterFind(i, j);
         if (length > longestCluster.length) {
           longestCluster = {
             length,
@@ -98,6 +98,33 @@ export default class Grid {
     return longestCluster;
   }
 
+  dfsClusterDraw(i, j, vertices, edges) {
+    if (this.visited[i][j]) return;
+    this.visited[i][j] = true;
+    vertices.push([i, j]);
+
+    const neighbours = [
+      [i + 1, j],
+      [i - 1, j],
+      [i, j + 1],
+      [i, j - 1]
+    ]
+
+    neighbours.map(([p, q]) => {
+      if (p < 0 || p >= this.size || q < 0 || q >= this.size) return;
+      if (!this.getEdge(i, j, p, q)) return;
+      edges.push([i, j, p, q]);
+      this.dfsClusterDraw(p, q, vertices, edges);
+    })
+  }
+
+  getVerticesAndEdges(cluster) {
+    let vertices = [];
+    let edges = [];
+    this.setAllNotVisited();
+    this.dfsClusterDraw(cluster.startingNode.i, cluster.startingNode.j, vertices, edges);
+    return { vertices, edges };
+  }
 
   clearAdjList() {
     this.adjList = Array(this.size * this.size).fill(0).map(() => new Array());

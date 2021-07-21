@@ -25,7 +25,6 @@ class Model {
     this.probability = probability;
     this.grid.clearAdjList();
     this.grid.initAdjList(probability);
-    console.log(this.grid.findLongestCluster())
   }
 }
 
@@ -56,43 +55,57 @@ class View {
     let circles = this.svg
       .selectAll('circle')
       .data(vertices)
+      .attr('id', ([ i, j ]) => `circle-${i}-${j}`)
       .attr('cx', coordinate => this.coordinateToX(coordinate, size))
       .attr('cy', coordinate => this.coordinateToY(coordinate, size))
+      .style('stroke', 'gray')
+      .style('fill', 'black')
+      .attr('r', 2);
     circles.exit().remove();
     circles
       .enter()
       .append('circle')
-      .style('stroke', 'gray')
-      .style('fill', 'black')
-      .attr('r', 2)
+      .attr('id', ([ i, j ]) => `circle-${i}-${j}`)
       .attr('cx', coordinate => this.coordinateToX(coordinate, size))
       .attr('cy', coordinate => this.coordinateToY(coordinate, size))
+      .style('stroke', 'gray')
+      .style('fill', 'black')
+      .attr('r', 2);
   }
 
   drawEdges(grid) {
     const edges = grid.getAllEdges();
-    console.log(edges);
     let lines = this.svg
       .selectAll("line")
       .data(edges)
-      .attr("x1", ([i1, j1, i2, j2]) => this.coordinateToX([i1, j1], grid.size))
-      .attr("y1", ([i1, j1, i2, j2]) => this.coordinateToY([i1, j1], grid.size))
-      .attr("x2", ([i1, j1, i2, j2]) => this.coordinateToX([i2, j2], grid.size))
-      .attr("y2", ([i1, j1, i2, j2]) => this.coordinateToY([i2, j2], grid.size));
-
-    lines.exit().remove();
-
-    lines
-      .enter()
-      .append("line")
+      .attr('id', ([i1, j1, i2, j2]) => `line-${i1}-${j1}-${i2}-${j2}`)
       .attr("x1", ([i1, j1, i2, j2]) => this.coordinateToX([i1, j1], grid.size))
       .attr("y1", ([i1, j1, i2, j2]) => this.coordinateToY([i1, j1], grid.size))
       .attr("x2", ([i1, j1, i2, j2]) => this.coordinateToX([i2, j2], grid.size))
       .attr("y2", ([i1, j1, i2, j2]) => this.coordinateToY([i2, j2], grid.size))
-      .attr("stroke", "black");
-
-    console.log(lines);
-    
+      .style("stroke", "black");;
+    lines.exit().remove();
+    lines
+      .enter()
+      .append("line")
+      .attr('id', ([i1, j1, i2, j2]) => `line-${i1}-${j1}-${i2}-${j2}`)
+      .attr("x1", ([i1, j1, i2, j2]) => this.coordinateToX([i1, j1], grid.size))
+      .attr("y1", ([i1, j1, i2, j2]) => this.coordinateToY([i1, j1], grid.size))
+      .attr("x2", ([i1, j1, i2, j2]) => this.coordinateToX([i2, j2], grid.size))
+      .attr("y2", ([i1, j1, i2, j2]) => this.coordinateToY([i2, j2], grid.size))
+      .style("stroke", "black");
+  }
+  drawCluster({ vertices, edges }) {
+    vertices.forEach(([i, j]) => {
+      d3.select(`#circle-${i}-${j}`)
+        .style("stroke", "red")
+        .style("fill", "red")
+        .attr("r", 3)
+    });
+    edges.forEach(([i1, j1, i2, j2]) => {
+      d3.select(`#line-${i1}-${j1}-${i2}-${j2}`)
+        .style("stroke", "red");
+    })
   }
 }
 
@@ -106,17 +119,29 @@ class Controller {
   drawInitial() {
     this.view.drawVertices(this.model.grid.size);
     this.view.drawEdges(this.model.grid);
+    const longestCluster = this.model.grid.findLongestCluster();
+    this.view.drawCluster(
+      this.model.grid.getVerticesAndEdges(longestCluster)
+    );
   }
 
   setSize(size) {
     this.model.setSize(size);
     this.view.drawVertices(size);
     this.view.drawEdges(this.model.grid);
+    const longestCluster = this.model.grid.findLongestCluster();
+    this.view.drawCluster(
+      this.model.grid.getVerticesAndEdges(longestCluster)
+    );
   }
 
   setProbability(probability) {
     this.model.setProbability(probability);
-    this.view.drawEdges(this.model.grid)
+    this.view.drawEdges(this.model.grid);
+    const longestCluster = this.model.grid.findLongestCluster();
+    this.view.drawCluster(
+      this.model.grid.getVerticesAndEdges(longestCluster)
+    );
   }
 }
 
