@@ -6,7 +6,7 @@ const HEIGHT = 500;
 const PADDING_HORIZONTAL = 60;
 const PADDING_VERTICAL = 60;
 
-const CONTAINER_ID = "body";
+const CONTAINER_ID = "#percolation-graph";
 
 class Model {
   constructor(probability, size) {
@@ -31,9 +31,9 @@ class Model {
 
 class View {
   constructor() {
-    debugger;
     this.svg = d3
       .select(CONTAINER_ID)
+      .append('svg')
       .attr("width", WIDTH)
       .attr("height", HEIGHT);
     this.svg.append("text").text("asdf");
@@ -54,13 +54,13 @@ class View {
       }
     }
     this.svg
-      .select('circle')
+      .selectAll('circle')
       .data(vertices)
       .enter()
       .append('circle')
       .style('stroke', 'gray')
       .style('fill', 'black')
-      .attr('r', 25)
+      .attr('r', 2)
       .attr('cx', coordinate => this.coordinateToX(coordinate, grid.size))
       .attr('cy', coordinate => this.coordinateToY(coordinate, grid.size))
   }
@@ -70,7 +70,7 @@ class Controller {
   constructor(model, view) {
     this.model = model;
     this.view = view;
-    // this.draw()
+    this.draw()
   }
 
   draw() {
