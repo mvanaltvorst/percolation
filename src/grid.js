@@ -138,12 +138,13 @@ export default class Grid {
     for (let i = 0; i < this.size; i++) {
       for (let j = 0; j < this.size; j++) {
         if (j != this.size - 1) {
-          // not in last column => we can move on vertex right
+          // not in last column => we can move one vertex right
           if (Math.random() < probability) {
             this.addEdge(i, j, i, j+1);
           }
         }
         if (i != this.size - 1) {
+          // not in last row => we can move one vertex down
           if (Math.random() < probability) {
             this.addEdge(i, j, i+1, j);
           }

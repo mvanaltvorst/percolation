@@ -10,9 +10,9 @@ const CONTAINER_ID = "#percolation-graph";
 const SIZE_LABEL_ID = "#percolation-size";
 const PROBABILITY_LABEL_ID = "#percolation-probability";
 
-const BLACK_CIRCLE_RADIUS = 5;
+const BLACK_CIRCLE_RADIUS = 0;
 const BLACK_EDGE_WIDTH    = 2;
-const RED_CIRCLE_RADIUS   = 5;
+const RED_CIRCLE_RADIUS   = 3;
 const RED_EDGE_WIDTH      = 2;
 
 class Model {
