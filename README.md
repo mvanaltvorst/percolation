@@ -6,7 +6,7 @@ It uses `d3.js`, and contains a build system that makes it easy to deploy onto a
 ## Live demo
 [![Netlify Status](https://api.netlify.com/api/v1/badges/4c13e3a8-7604-44b2-adfd-f1b18d52b6b6/deploy-status)](https://app.netlify.com/sites/percolation/deploys)
 
-[Live demo][https://percolation.netlify.app]
+[Live demo](https://percolation.netlify.app)
 
 
 
