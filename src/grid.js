@@ -77,6 +77,9 @@ export default class Grid {
   }
 
   findLongestCluster() {
+    // if you find a cluster with >= 1/2 * nVertices, you don't have to check the rest
+    // for a longer cluster.
+    const instantReturnThreshold = this.size*this.size / 2;
     this.setAllNotVisited();
     let longestCluster = {
       length: 0,
@@ -92,6 +95,7 @@ export default class Grid {
             length,
             startingNode: { i, j }
           }
+          if (length > instantReturnThreshold) return longestCluster;
         }
       }
     }

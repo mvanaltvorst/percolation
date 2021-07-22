@@ -137,6 +137,7 @@ class Controller {
 
   setProbability(probability) {
     this.model.setProbability(probability);
+    this.view.drawVertices(this.model.grid.size);
     this.view.drawEdges(this.model.grid);
     const longestCluster = this.model.grid.findLongestCluster();
     this.view.drawCluster(
