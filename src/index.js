@@ -7,6 +7,8 @@ const PADDING_HORIZONTAL = 60;
 const PADDING_VERTICAL = 60;
 
 const CONTAINER_ID = "#percolation-graph";
+const SIZE_LABEL_ID = "#percolation-size";
+const PROBABILITY_LABEL_ID = "#percolation-probability";
 
 const BLACK_CIRCLE_RADIUS = 5;
 const BLACK_EDGE_WIDTH    = 2;
@@ -41,6 +43,11 @@ class View {
       .attr("width", WIDTH)
       .attr("height", HEIGHT);
     this.svg.append("text").text("asdf");
+  }
+
+  drawLabels(size, probability) {
+    d3.select(SIZE_LABEL_ID).text(size);
+    d3.select(PROBABILITY_LABEL_ID).text(`${(probability * 100).toFixed(1)}%`);
   }
 
   coordinateToX([i, j], size) {
@@ -122,10 +129,11 @@ class Controller {
   constructor(model, view) {
     this.model = model;
     this.view = view;
-    this.drawInitial()
+    this.drawInitial();
   }
 
   drawInitial() {
+    this.view.drawLabels(this.model.grid.size, this.model.probability);
     this.view.drawVertices(this.model.grid.size);
     this.view.drawEdges(this.model.grid);
     const longestCluster = this.model.grid.findLongestCluster();
@@ -136,6 +144,7 @@ class Controller {
 
   setSize(size) {
     this.model.setSize(size);
+    this.view.drawLabels(this.model.grid.size, this.model.probability);
     this.view.drawVertices(size);
     this.view.drawEdges(this.model.grid);
     const longestCluster = this.model.grid.findLongestCluster();
@@ -146,6 +155,7 @@ class Controller {
 
   setProbability(probability) {
     this.model.setProbability(probability);
+    this.view.drawLabels(this.model.grid.size, this.model.probability);
     this.view.drawVertices(this.model.grid.size);
     this.view.drawEdges(this.model.grid);
     const longestCluster = this.model.grid.findLongestCluster();
