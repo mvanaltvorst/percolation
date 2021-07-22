@@ -40,9 +40,8 @@ class View {
     this.svg = d3
       .select(CONTAINER_ID)
       .append('svg')
-      .attr("width", WIDTH)
-      .attr("height", HEIGHT);
-    this.svg.append("text").text("asdf");
+      .attr("viewBox", "0 0 " + WIDTH + " " + HEIGHT)
+      .attr("preserveAspectRatio", "xMinYMin meet")
   }
 
   drawLabels(size, probability) {
