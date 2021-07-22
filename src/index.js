@@ -8,6 +8,11 @@ const PADDING_VERTICAL = 60;
 
 const CONTAINER_ID = "#percolation-graph";
 
+const BLACK_CIRCLE_RADIUS = 5;
+const BLACK_EDGE_WIDTH    = 2;
+const RED_CIRCLE_RADIUS   = 5;
+const RED_EDGE_WIDTH      = 2;
+
 class Model {
   constructor(probability, size) {
     this.probability = probability;
@@ -38,11 +43,11 @@ class View {
     this.svg.append("text").text("asdf");
   }
 
-  coordinateToX([ i, j ], size) {
-    return PADDING_HORIZONTAL + (j/(size-1)) * (WIDTH - 2 * PADDING_HORIZONTAL);
+  coordinateToX([i, j], size) {
+    return PADDING_HORIZONTAL + (j / (size - 1)) * (WIDTH - 2 * PADDING_HORIZONTAL);
   }
-  coordinateToY([ i, j ], size) {
-    return PADDING_VERTICAL   + (i/(size-1)) * (HEIGHT - 2 * PADDING_VERTICAL );
+  coordinateToY([i, j], size) {
+    return PADDING_VERTICAL + (i / (size - 1)) * (HEIGHT - 2 * PADDING_VERTICAL);
   }
 
   drawVertices(size) {
@@ -55,22 +60,22 @@ class View {
     let circles = this.svg
       .selectAll('circle')
       .data(vertices)
-      .attr('id', ([ i, j ]) => `circle-${i}-${j}`)
+      .attr('id', ([i, j]) => `circle-${i}-${j}`)
       .attr('cx', coordinate => this.coordinateToX(coordinate, size))
       .attr('cy', coordinate => this.coordinateToY(coordinate, size))
       .style('stroke', 'gray')
       .style('fill', 'black')
-      .attr('r', 2);
+      .attr('r', BLACK_CIRCLE_RADIUS);
     circles.exit().remove();
     circles
       .enter()
       .append('circle')
-      .attr('id', ([ i, j ]) => `circle-${i}-${j}`)
+      .attr('id', ([i, j]) => `circle-${i}-${j}`)
       .attr('cx', coordinate => this.coordinateToX(coordinate, size))
       .attr('cy', coordinate => this.coordinateToY(coordinate, size))
       .style('stroke', 'gray')
       .style('fill', 'black')
-      .attr('r', 2);
+      .attr('r', BLACK_CIRCLE_RADIUS);
   }
 
   drawEdges(grid) {
@@ -83,7 +88,8 @@ class View {
       .attr("y1", ([i1, j1, i2, j2]) => this.coordinateToY([i1, j1], grid.size))
       .attr("x2", ([i1, j1, i2, j2]) => this.coordinateToX([i2, j2], grid.size))
       .attr("y2", ([i1, j1, i2, j2]) => this.coordinateToY([i2, j2], grid.size))
-      .style("stroke", "black");;
+      .style("stroke", "black")
+      .style("stroke-width", BLACK_EDGE_WIDTH);
     lines.exit().remove();
     lines
       .enter()
@@ -93,18 +99,21 @@ class View {
       .attr("y1", ([i1, j1, i2, j2]) => this.coordinateToY([i1, j1], grid.size))
       .attr("x2", ([i1, j1, i2, j2]) => this.coordinateToX([i2, j2], grid.size))
       .attr("y2", ([i1, j1, i2, j2]) => this.coordinateToY([i2, j2], grid.size))
-      .style("stroke", "black");
+      .style("stroke", "black")
+      .style("stroke-width", BLACK_EDGE_WIDTH);
   }
+
   drawCluster({ vertices, edges }) {
     vertices.forEach(([i, j]) => {
       d3.select(`#circle-${i}-${j}`)
         .style("stroke", "red")
         .style("fill", "red")
-        .attr("r", 3)
+        .attr("r", RED_CIRCLE_RADIUS);
     });
     edges.forEach(([i1, j1, i2, j2]) => {
       d3.select(`#line-${i1}-${j1}-${i2}-${j2}`)
-        .style("stroke", "red");
+        .style("stroke", "red")
+        .style("stroke-width", RED_EDGE_WIDTH);
     })
   }
 }
